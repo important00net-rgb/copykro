@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BALAJI COPIER - प्रीमियम एडिशन</title>
+    <style>
+        /* CSS RESET & VARIABLES */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif; 
+        }
+
+        :root {
+            --bg-dark: #0a0e17;
+            --card-bg: #121824;
+            --neon-blue: #00f0ff;
+            --neon-green: #39ff14;
+            --neon-pink: #ff007f;
+            --text-main: #ffffff;
+            --text-muted: #8fa0dd;
+        }
+
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* BACKGROUND GLOWS */
+        body::before, body::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(0, 240, 255, 0.15);
+            filter: blur(100px);
+            z-index: -1;
+            animation: floatGlow 8s infinite alternate ease-in-out;
+        }
+        body::before { top: 10%; left: 10%; }
+        body::after { bottom: 10%; right: 10%; background: rgba(255, 0, 127, 0.1); animation-delay: 4s; }
+
+        @keyframes floatGlow {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.2); }
+        }
+
+        /* MAIN CONTAINER WITH NEON BORDER ANIMATION */
+        .container { 
+            background: var(--card-bg); 
+            max-width: 600px; 
+            width: 100%; 
+            padding: 35px 30px; 
+            border-radius: 16px; 
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            transition: all 0.4s ease;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+        }
+
+        /* TITLES */
+        h2 { 
+            text-align: center; 
+            margin-bottom: 8px; 
+            color: var(--text-main); 
+            font-size: 32px;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+        }
+        
+        p.subtitle { 
+            text-align: center; 
+            font-size: 14px; 
+            color: var(--text-muted); 
+            margin-bottom: 25px; 
+        }
+
+        /* NEON RATE CARD */
+        .rate-card { 
+            background: rgba(0, 240, 255, 0.05); 
+            border: 1px dashed var(--neon-blue);
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 25px; 
+            font-size: 14px;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+        }
+        .rate-card strong { color: var(--neon-blue); text-shadow: 0 0 5px rgba(0,240,255,0.3); }
+
+        /* INPUTS & FORM GROUPS */
+        .form-group { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            font-size: 13px; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="text"], input[type="tel"], input[type="number"] { 
+            width: 100%; 
+            padding: 12px; 
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 8px; 
+            font-size: 15px; 
+            color: #fff;
+            outline: none; 
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus, input[type="tel"]:focus { 
+            border-color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.02);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        }
+
+        /* ANIMATED UPLOAD ZONE */
+        .main-upload-zone { 
+            border: 2px dashed rgba(255, 0, 127, 0.4); 
+            padding: 35px 20px; 
+            border-radius: 10px; 
+            text-align: center; 
+            background: rgba(255, 0, 127, 0.02); 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-upload-zone:hover {
+            border-color: var(--neon-pink);
+            background: rgba(255, 0, 127, 0.05);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+            transform: scale(1.01);
+        }
+
+        .main-upload-zone p { font-size: 16px; color: var(--neon-pink); font-weight: bold; margin-bottom: 5px; }
+        .main-upload-zone span { font-size: 12px; color: var(--text-muted); }
+
+        #file-input-hidden { display: none; }
+
+        /* DYNAMIC FILE BLOCKS WITH SCALE-IN ANIMATION */
+        #files-grid-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        
+        .file-block { 
+            background: rgba(255,255,255,0.02); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 10px; 
+            padding: 15px; 
+            position: relative; 
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .file-block-header { font-weight: bold; color: #fff; font-size: 14px; margin-bottom: 6px; word-break: break-all; padding-right: 60px; }
+        
+        .upload-status { font-size: 12px; font-weight: bold; color: #ff9f43; margin-bottom: 12px; }
+        
+        .block-settings { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(0,0,0,0.2); 
+            padding: 10px 12px; 
+            border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin: 0 8px 0 0;
+            cursor: pointer;
+            color: #fff;
+            text-transform: none;
+            font-size: 14px;
+        }
+
+        .radio-group input { margin-right: 5px; accent-color: var(--neon-blue); }
+
+        .copies-count { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .copies-count input { width: 55px; padding: 5px; text-align: center; }
+
+        .btn-delete-block { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            background: rgba(231, 76, 60, 0.2); 
+            color: #e74c3c; 
+            border: 1px solid #e74c3c; 
+            padding: 5px 10px; 
+            font-size: 11px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        .btn-delete-block:hover { background: #e74c3c; color: #fff; }
+
+        /* SUBMIT BUTTON WITH GLOW EFFECT */
+        .btn-submit { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(135deg, #2ecc71, #1abc9c); 
+            border: none; 
+            color: white; 
+            font-size: 16px; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn-submit:hover { 
+            box-shadow: 0 0 20px var(--neon-green);
+            transform: translateY(-2px);
+        }
+        .btn-submit:active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BALAJI COPIER</h2>
+    <p class="subtitle">डॉक्यूमेंट अपलोड करें और व्हाट्सएप पर डायरेक्ट लिंक पाएं</p>
+
+    <div class="rate-card">
+        <strong>💸 हमारा रेट चार्ट:</strong>
+        <p style="margin-top: 5px; color: var(--text-muted); font-size: 13px;">
+            🖤 <b>B&W:</b> 1-2 कॉपी: ₹10/कॉपी | 3 या अधिक: ₹5/कॉपी <br>
+            🎨 <b>Color:</b> 1 कॉपी: ₹20/कॉपी | 2 या अधिक: ₹15/कॉपी
+        </p>
+    </div>
+
+    <form id="photocopyForm">
+        <div class="form-group">
+            <label>ग्राहक का नाम *</label>
+            <input type="text" id="cust-name" placeholder="अपना नाम लिखें" required>
+        </div>
+
+        <div class="form-group">
+            <label>मोबाइल नंबर *</label>
+            <input type="tel" id="cust-phone" placeholder="98765XXXXX" pattern="[0-9]{10}" required>
+        </div>
+
+        <div class="form-group">
+            <label>अपने डॉक्यूमेंट यहाँ अपलोड करें *</label>
+            <div class="main-upload-zone" onclick="document.getElementById('file-input-hidden').click()">
+                <p>📁 फाइलें चुनने के लिए यहाँ क्लिक करें</p>
+                <span>(PDF, फोटो सब कुछ सपोर्टेड है)</span>
+                <input type="file" id="file-input-hidden" accept="*" multiple onchange="handleFileSelection()">
+            </div>
+        </div>
+
+        <div id="files-grid-container"></div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">🟢 व्हाट्सएप पर ऑर्डर भेजें</button>
+    </form>
+</div>
+
+<script>
+    let uploadedFilesArray = [];
+
+    // ✅ आपका व्हाट्सएप नंबर फिक्स है
+    const MY_WHATSAPP_NUMBER = "9205773269"; 
+
+    function handleFileSelection() {
+        const input = document.getElementById('file-input-hidden');
+        const container = document.getElementById('files-grid-container');
+        
+        for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
+            const fileId = Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            uploadedFilesArray.push({
+                id: fileId,
+                fileName: file.name,
+                printType: 'Black & White',
+                copies: 1,
+                downloadUrl: 'Uploading...'
+            });
+            
+            const block = document.createElement('div');
+            block.className = 'file-block';
+            block.id = `block-${fileId}`;
+            
+            block.innerHTML = `
+                <div class="file-block-header">📄 ${file.name}</div>
+                <div class="upload-status" id="status-${fileId}">⏳ फाइल अपलोड हो रही है...</div>
+                <button type="button" class="btn-delete-block" onclick="removeFileBlock('${fileId}')">हटाएं</button>
+                
+                <div class="block-settings">
+                    <div class="radio-group">
+                        <label><input type="radio" name="type_${fileId}" value="Black & White" checked onchange="updateBlockSettings('${fileId}', 'type', 'Black & White')"> B&W</label>
+                        <label><input type="radio" name="type_${fileId}" value="Color" onchange="updateBlockSettings('${fileId}', 'type', 'Color')"> Color</label>
+                    </div>
+                    <div class="copies-count">
+                        <span>कॉपियां:</span>
+                        <input type="number" value="1" min="1" oninput="updateBlockSettings('${fileId}', 'copies', this.value)">
+                    </div>
+                </div>
+            `;
+            container.appendChild(block);
+
+            // नो-फेल अपलोड
+            uploadFileToServer(file, fileId);
+        }
+        input.value = '';
+    }
+
+    async function uploadFileToServer(file, fileId) {
+        try {
+            let formData = new FormData();
+            formData.append("reqtype", "fileupload");
+            formData.append("userhash", "");
+            formData.append("fileToUpload", file);
+
+            const response = await fetch("https://corsproxy.io/?url=https://catbox.moe/user/api.php", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                const textLink = await response.text();
+                if (textLink.includes("http")) {
+                    const fileIndex = uploadedFilesArray.findIndex(f => f.id === fileId);
+                    if(fileIndex !== -1) {
+                        uploadedFilesArray[fileIndex].downloadUrl = textLink.trim();
+                    }
+                    
+                    const statusEl = document.getElementById(`status-${fileId}`);
+                    if(statusEl) {
+                        statusEl.innerText = "✅ अपलोड सफल (लिंक तैयार)";
+                        statusEl.style.color = "#39ff14";
+                        statusEl.style.textShadow = "0 0 5px rgba(57,255,20,0.3)";
+                    }
+                    return;
+                }
+            }
+            throw new Error("Failed");
+        } catch (error) {
+            // बैकअप सर्वर
+            try {
+                let backupData = new FormData();
+                backupData.append("file", file);
+                const res = await fetch("https://tmpfiles.org/api/v1/upload", {
+                    method: "POST",
+                    body: backupData
+                });
+                const json = await res.json();
+                if(json.data && json.data.url) {
+                    const directUrl = json.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+                    const fileIndex = uploadedFilesArray.findIndex(f => f.id === fileId);
+                    if(fileIndex !== -1) uploadedFilesArray[fileIndex].downloadUrl = directUrl;
+                    
+                    const statusEl = document.getElementById(`status-${fileId}`);
+                    if(statusEl) {
+                        statusEl.innerText = "✅ अपलोड सफल (लिंक तैयार)";
+                        statusEl.style.color = "#39ff14";
+                    }
+                    return;
+                }
+            } catch(e) {}
+
+            const statusEl = document.getElementById(`status-${fileId}`);
+            if(statusEl) {
+                statusEl.innerText = "❌ अपलोड फेल हुआ, दोबारा चुनें";
+                statusEl.style.color = "#ff007f";
+            }
+        }
+    }
+
+    function updateBlockSettings(id, type, value) {
+        const fileIndex = uploadedFilesArray.findIndex(f => f.id === id);
+        if (fileIndex !== -1) {
+            if (type === 'type') uploadedFilesArray[fileIndex].printType = value;
+            else if (type === 'copies') uploadedFilesArray[fileIndex].copies = parseInt(value) || 1;
+        }
+    }
+
+    function removeFileBlock(id) {
+        const el = document.getElementById(`block-${id}`);
+        if(el) el.remove();
+        uploadedFilesArray = uploadedFilesArray.filter(f => f.id !== id);
+    }
+
+    function calculateGrandTotalForWhatsApp() {
+        let totalAmount = 0;
+        uploadedFilesArray.forEach(item => {
+            let itemPrice = 0;
+            if (item.printType === 'Black & White') {
+                itemPrice = item.copies >= 3 ? item.copies * 5 : item.copies * 10;
+            } else {
+                itemPrice = item.copies >= 2 ? item.copies * 15 : item.copies * 20;
+            }
+            totalAmount += itemPrice;
+        });
+        return totalAmount;
+    }
+
+    document.getElementById('photocopyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if(uploadedFilesArray.length === 0) {
+            alert("कृपया कम से कम एक फाइल ज़रूर जोड़ें।");
+            return;
+        }
+
+        const isUploading = uploadedFilesArray.some(f => f.downloadUrl === 'Uploading...');
+        if(isUploading) {
+            alert("कृपया रुकें, फाइलें अभी क्लाउड पर अपलोड हो रही हैं...");
+            return;
+        }
+
+        const name = document.getElementById('cust-name').value;
+        const phone = document.getElementById('cust-phone').value;
+        const finalBillAmount = calculateGrandTotalForWhatsApp();
+
+        let message = `*📄 नया फोटोकॉपी आदेश (BALAJI COPIER)*\n\n`;
+        message += `👤 *नाम:* ${name}\n`;
+        message += `📞 *मोबाइल:* ${phone}\n`;
+        message += `💰 *अनुमानित कुल मूल्य:* ₹${finalBillAmount}\n\n`;
+        message += `📋 *डॉक्यूमेंट डिटेल्स:*`;
+
+        uploadedFilesArray.forEach((item, index) => {
+            message += `\n\n${index+1}. ${item.fileName}\n   - टाइप: ${item.printType}\n   - कॉपियां: ${item.copies}\n   - 🔗 डाउनलोड लिंक: ${item.downloadUrl}`;
+        });
+
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=91${MY_WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+</script>
+
+</body>
+</html>
